@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agendamentos da Barbearia</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        input[type="text"], input[type="datetime-local"], button {
+            padding: 10px;
+            font-size: 16px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            outline: none;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+            border: none;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .agendamentos-list {
+            margin-top: 30px;
+            padding: 10px;
+            background-color: #e9f5e9;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .agendamentos-list ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .agendamentos-list li {
+            padding: 10px;
+            background-color: #fff;
+            margin-bottom: 12px;
+            border-radius: 5px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .agendamentos-list li:hover {
+            transform: translateX(10px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .agendamento-info {
+            flex-grow: 1;
+        }
+
+        .hora {
+            font-weight: bold;
+            color: #4CAF50;
+        }
+
+        .mensagem {
+            color: red;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Agende seu horário na Barbearia</h1>
+    </header>
+
+    <div class="container">
+        {% if mensagem %}
+            <p class="mensagem">{{ mensagem }}</p>
+        {% endif %}
+
+        <form method="POST" action="/agendar">
+            <label for="nome">Seu nome:</label>
+            <input type="text" id="nome" name="nome" required>
+
+            <label for="data_hora">Data e hora:</label>
+            <input type="datetime-local" id="data_hora" name="data_hora" required>
+
+            <button type="submit">Agendar</button>
+        </form>
+
+        <div class="agendamentos-list">
+            <h2>Agendamentos:</h2>
+            <ul>
+                {% for agendamento in agendamentos %}
+                    <li>
+                        <div class="agendamento-info">
+                            <strong>{{ agendamento.nome }}</strong>
+                            <div class="hora">{{ agendamento.data_hora_formatada }}</div>
+                        </div>
+                        <div>
+                            <a href="{{ url_for('editar', id=loop.index0) }}" style="color: blue;">Editar</a>
+                            <a href="{{ url_for('remover', id=loop.index0) }}" style="color: red;">Remover</a>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+</body>
+</html>
